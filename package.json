@@ -4,7 +4,8 @@
   "description": "browser extension used to tag users across multiple websites",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dist": "webpack --production"
   },
   "repository": {
     "type": "git",

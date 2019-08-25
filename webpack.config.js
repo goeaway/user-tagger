@@ -37,7 +37,7 @@ var config = {
         historyApiFallback: true,
         index: "index.html"
     },
-    mode: "development"
+    mode: "production"
 }
 
 module.exports = config;
