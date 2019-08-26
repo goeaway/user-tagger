@@ -11,7 +11,7 @@ export interface ISiteService {
     /**
      * Gets the CommentPage representation of the active tab's current location, returns undefined if the current page is not supported
      */
-    getSiteCommentPage: () => Site;
+    getCurrentSite: () => Site;
 }
 
 export interface IStorageService {

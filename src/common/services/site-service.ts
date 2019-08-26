@@ -14,7 +14,7 @@ export default class SiteService implements ISiteService {
         pages.push(
             { id: "yt", name: "YouTube", domain: "youtube.com", locationPattern: "/watch", userIdentElementSelector: "a#author-text" },
             { id: "ore", name: "Old Reddit", domain: "old.reddit.com", locationPattern: "/comments/", userIdentElementSelector: "a.author" },
-            { id: "nre", name: "New Reddit", domain: "reddit.com", locationPattern: "/comments/", userIdentElementSelector: 'a[href^="/user/"'}
+            { id: "nre", name: "New Reddit", domain: "reddit.com", locationPattern: "/comments/", userIdentElementSelector: 'a[href^="/user/"]'}
         );
 
         const { host } = window.location;
@@ -35,7 +35,7 @@ export default class SiteService implements ISiteService {
         return this._currentSite !== undefined;
     }
 
-    getSiteCommentPage = () : Site => {
+    getCurrentSite = () : Site => {
         return this._currentSite;
     }
 }
