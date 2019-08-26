@@ -1,13 +1,20 @@
 var path = require("path");
 var config = {
-    entry: ["./src/index.tsx"],
+    entry: {
+        content: "./src/content/index.tsx",
+        popup: "./src/popup/index.tsx"
+    },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "bundle.js",
+        filename: "[name]-bundle.js",
         publicPath: "/output"
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        // alias: {
+        //     'react': 'preact/compat',
+        //     'react-dom': 'preact/compat'
+        // },
     },
     module: {
         rules: [
@@ -26,16 +33,6 @@ var config = {
                 use: ["style-loader", "css-loader"],
             }
         ]
-    },
-    devServer: {
-        contentBase: "./wwwroot",
-        publicPath: "/output",
-        hot: true,
-        headers: {
-            "Access-Control-Allow-Origin": "*"
-        },
-        historyApiFallback: true,
-        index: "index.html"
     },
     mode: "production"
 }
