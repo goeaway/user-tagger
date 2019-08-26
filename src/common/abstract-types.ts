@@ -1,0 +1,28 @@
+import { Site, SiteUser, UserTag } from "./types";
+
+/**
+ * Service providing information and data about supported sites
+ */
+export interface ISiteService {
+    /**
+     * Returns a boolean value representing if the current site the active tab is on is supported by the app, either by default sites or user defined ones
+     */
+    locationSupported: () => boolean;
+    /**
+     * Gets the CommentPage representation of the active tab's current location, returns undefined if the current page is not supported
+     */
+    getSiteCommentPage: () => Site;
+}
+
+export interface IStorageService {
+    get: (key: string) => {};
+    set: (key: string, value: any) => void;
+}
+
+export interface ISiteUserService {
+    getAll: () => Array<SiteUser>;
+    /**
+     * Gets all users matching the site (if specified) and tag list (if specified). If multiple tags are specified only users matching all tags are returned
+     */
+    get: (site?: Site, tags?: Array<UserTag>) => Array<SiteUser>;
+}
