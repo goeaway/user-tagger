@@ -2,7 +2,7 @@ import * as React from "react";
 import { ISiteService, IStorageService, ISiteUserService } from "../../common/abstract-types";
 import * as selector from "css-select";
 import { getElementParent } from "../../common/utils/parent-element-indexer";
-import { createPortal } from "react-dom";
+import { createPortal, findDOMNode } from "react-dom";
 import TagList from "../components/tag-list";
 
 export interface ContentAppProps {
@@ -22,6 +22,8 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService })
         // every username element found will be given a button for the ext user to add tags
         for(let i = 0; i < commentElements.length; i++) {
             const commentElement = commentElements[i];
+
+            // first check if the component has already been added, we don't want to do it normally (unless the popup notifies us a new user has been added to the users list)
             const anchorElement = getElementParent(commentElement, currentSite.userIdentElementParentAnchorIndex);
 
             createPortal(
