@@ -12,9 +12,9 @@ export default class SiteService implements ISiteService {
         const pages: Array<Site> = []
 
         pages.push(
-            { id: "yt", name: "YouTube", domain: "youtube.com", locationPattern: "/watch", userIdentElementSelector: "a#author-text" },
-            { id: "ore", name: "Old Reddit", domain: "old.reddit.com", locationPattern: "/comments/", userIdentElementSelector: "a.author" },
-            { id: "nre", name: "New Reddit", domain: "reddit.com", locationPattern: "/comments/", userIdentElementSelector: 'a[href^="/user/"]'}
+            { id: "yt", name: "YouTube", domain: "youtube.com", locationPattern: "/watch", userIdentElementSelector: "a#author-text", userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3 },
+            { id: "ore", name: "Old Reddit", domain: "old.reddit.com", locationPattern: "/comments/", userIdentElementSelector: "a.author", userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3 },
+            { id: "nre", name: "New Reddit", domain: "reddit.com", locationPattern: "/comments/", userIdentElementSelector: 'a[href^="/user/"]', userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3}
         );
 
         const { host } = window.location;

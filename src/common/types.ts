@@ -19,9 +19,18 @@ export interface Site {
      */
     locationPattern: string;
     /**
-     * A pre-defined selector that defines the DOM element that tags will be added to.
+     * A pre-defined selector that defines the DOM element that identifies a user.
      */
     userIdentElementSelector: string;
+    /**
+     * An integer value that defines how many levels up the app should go to append the tags and controls to, relative to the userIdentElementSelector. 
+     * This is only required if the selector element is not suitable to add components to, such as an <a> tag. If this number is 0 or less, the userIdentElementSelector is used
+     */
+    userIdentElementParentAnchorIndex: number;
+    /**
+     * An integer value that defines how many levels up the app should go to affect the whole logical block for a site user post, relative to the userIdentElementSelector
+     */
+    userIdentElementParentBlockIndex: number;
 }
 
 /**
