@@ -25,4 +25,12 @@ export interface ISiteUserService {
      * Gets all users matching the site (if specified) and tag list (if specified). If multiple tags are specified only users matching all tags are returned
      */
     get: (site?: Site, tags?: Array<UserTag>) => Array<SiteUser>;
+    /**
+     * Gets the first user that matches the username, site or tags in the list. Returns undefined if no users were found
+     */
+    getOne: (username?: string, site?: Site, tags?: Array<UserTag>) => SiteUser;
+}
+
+export interface IUsernameExtractionService {
+    extract: (elementHTML: string) => string;
 }

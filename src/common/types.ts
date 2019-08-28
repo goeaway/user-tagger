@@ -31,6 +31,14 @@ export interface Site {
      * An integer value that defines how many levels up the app should go to affect the whole logical block for a site user post, relative to the userIdentElementSelector
      */
     userIdentElementParentBlockIndex: number;
+    /**
+     * A string representation of a regex pattern used to extract the username from the userIdentElement
+     */
+    usernameExtractionRegex: string;
+    /**
+     * A function that defines when the mounting function should be run. Could be run straight away or after a period of time or when an element's properties are changed
+     */
+    defineTriggers: (mounter: Function) => void;
 }
 
 /**
