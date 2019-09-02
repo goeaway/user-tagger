@@ -35,10 +35,7 @@ export interface Site {
      * A string representation of a regex pattern used to extract the username from the userIdentElement
      */
     usernameExtractionRegex: string;
-    /**
-     * A function that defines when the mounting function should be run. Could be run straight away or after a period of time or when an element's properties are changed
-     */
-    defineTriggers: (mounter: Function) => void;
+    commentSectionContainer: string;
 }
 
 /**

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "dist": "webpack --production"
+    "dist": "webpack --production",
+    "simple": "webpack-dev-server --hot --inline"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "jest": "^24.9.0",
+    "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "preact": "^8.5.2",
     "react": "^16.9.0",

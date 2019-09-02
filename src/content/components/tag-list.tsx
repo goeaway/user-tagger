@@ -19,7 +19,7 @@ const TagList: React.FC<TagListProps> = ({ tags }) => {
 
     return (
         <div className="user-tagger__tag-list">
-            {tags && tags.map(t => <span className="user-tagger__tag">{t.name}</span>)}
+            {tags && tags.map(t => <span key={t.name} className="user-tagger__tag">{t.name}</span>)}
             {editing ? 
             <TagInput onClose={tagInputCloseHandler} />
             :

@@ -1,10 +1,9 @@
 import * as React from "react";
-import { ISiteService, IStorageService, ISiteUserService, IUsernameExtractionService } from "../../common/abstract-types";
-import * as selector from "css-select";
+import { ISiteService, ISiteUserService, IUsernameExtractionService } from "../../common/abstract-types";
 import { getElementParent } from "../../common/utils/parent-element-indexer";
-import { createPortal, findDOMNode } from "react-dom";
+import { createPortal, } from "react-dom";
 import TagList from "../components/tag-list";
-import { Site } from "../../common/types";
+import "../styles/structure.less";
 
 export interface ContentAppProps {
     siteService: ISiteService;
@@ -17,35 +16,52 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
     if(siteService.locationSupported()) {
         const currentSite = siteService.getCurrentSite();
 
-        const mountTags = () => {
+        const createTags = () => {
             const commentElements = document.querySelectorAll(currentSite.userIdentElementSelector);
-    
+            const portals: React.ReactPortal[] = [];
             for(let i = 0; i < commentElements.length; i++) {
                 const commentElement = commentElements[i];
     
                 const anchorElement = getElementParent(commentElement, currentSite.userIdentElementParentAnchorIndex);
     
+                // if the anchor already has a component we don't want to add a another one
+                // but might want to check for any new tags for that user
+
                 const extractedUsername = extractionService.extract(commentElement.innerHTML);
     
                 const user = siteUserService.getOne(extractedUsername, currentSite);
                 // if the user is not undefined it means we got some tags to add
                 let tags = [];
-    
+                
                 if(user) {
                     tags = user.tags;
-
+                    
                     // apply rules based on the user's tags i.e. hide/highlight here
                 }
-    
-                createPortal(
+                
+                portals.push(createPortal(
                     <TagList tags={tags} />,
-                    anchorElement
-                );
+                    anchorElement,
+                    "user" + i
+                ));
             }
+
+            return portals;
         };
 
-        // an event handler should be set up
-        currentSite.defineTriggers(mountTags); 
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for(let i = 0; i < mutation.addedNodes.length; i++) {
+                    debugger;
+                }
+            })
+        });
+
+        var config = { attributes: true, childList: true, characterData: true };
+
+        observer.observe(document.querySelector(currentSite.commentSectionContainer), config);
+
+        return <React.Fragment>{createTags()}</React.Fragment>;
     }
 
     return null;

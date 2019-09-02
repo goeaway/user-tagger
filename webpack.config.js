@@ -34,7 +34,17 @@ var config = {
             }
         ]
     },
-    mode: "production"
+    mode: "development",
+    devServer: {
+        contentBase: "./testing/test-sites/simple",
+        publicPath: "/output",
+        hot: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        },
+        historyApiFallback: true,
+        index: "index.html"
+    }
 }
 
 module.exports = config;
