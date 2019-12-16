@@ -30,17 +30,9 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
                 const extractedUsername = extractionService.extract(commentElement.innerHTML);
     
                 const user = siteUserService.getOne(extractedUsername, currentSite);
-                // if the user is not undefined it means we got some tags to add
-                let tags = [];
-                
-                if(user) {
-                    tags = user.tags;
-                    
-                    // apply rules based on the user's tags i.e. hide/highlight here
-                }
-                
+
                 portals.push(createPortal(
-                    <TagList tags={tags} />,
+                    <TagList user={user} userService={siteUserService} />,
                     anchorElement,
                     "user" + i
                 ));

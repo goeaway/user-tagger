@@ -29,8 +29,14 @@ export interface ISiteUserService {
      * Gets the first user that matches the username, site or tags in the list. Returns undefined if no users were found
      */
     getOne: (username?: string, site?: Site, tags?: Array<UserTag>) => SiteUser;
+
+    updateUserTagList: (username: string, tags: Array<UserTag>) => void
 }
 
 export interface IUsernameExtractionService {
     extract: (elementHTML: string) => string;
+}
+
+export interface ITagService {
+    getTags: () => Array<UserTag>;
 }
