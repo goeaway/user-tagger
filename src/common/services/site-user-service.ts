@@ -6,7 +6,7 @@ export default class SiteUserService implements ISiteUserService {
 
     constructor() {
         this._userStore = [
-            { username: "username2", tags: [{ name: "twat", rules: []}] }
+            { username: "username2", tags: [{ name: "twat", rules: [], backgroundColor: "#000", color: "#fff"}] }
         ];
     }
 

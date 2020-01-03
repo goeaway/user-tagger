@@ -25,7 +25,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
         // if we don't already have one
         if(!tags.some(t => t.name === value)) {
             setEditing(false);
-            const updatedTags = tags.concat({name: value, rules: []});
+            const updatedTags = tags.concat({name: value, rules: [], backgroundColor: "#000", color: "#fff"});
             userService.updateUserTagList(user.username, updatedTags);
             setTags(updatedTags);
         } else {
@@ -41,7 +41,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
 
     return (
         <div className="user-tagger__tag-list">
-            {tags && tags.map(t => <span key={t.name} className="user-tagger__tag">{t.name}<button type="button" onClick={() => handleTagRemove(t.name)}>x</button></span>)}
+            {tags && tags.map(t => <span key={t.name} className="user-tagger__tag" style={{backgroundColor: t.backgroundColor, color: t.color}}>{t.name}<button type="button" className="user-tagger__tag__close-button" style={{color: t.color}} onClick={() => handleTagRemove(t.name)}>x</button></span>)}
             {editing ? 
             <TagInput onClose={tagInputCloseHandler} onEnterPressed={tagInputEnterPressedHandler} errorMessage={errorMsg} />
             :

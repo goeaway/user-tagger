@@ -52,6 +52,8 @@ export interface SiteUser {
 export interface UserTag {
     name: string;
     rules: Array<TagRule>;
+    backgroundColor: string;
+    color: string;
 }
 
 /**

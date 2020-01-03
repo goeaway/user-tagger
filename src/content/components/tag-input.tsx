@@ -26,10 +26,8 @@ const TagInput: React.FC<TagInputProps> = ({ onClose, onEnterPressed, errorMessa
 
     return (
         <div className="user-tagger__tag-input">
-            <div>
-                <input type="text" value={value} onChange={handleChange} onKeyDown={handleKeyPress} autoFocus />
-                <button type="button" onClick={onClose}>X</button>
-            </div>
+            <input type="text" value={value} onChange={handleChange} onKeyDown={handleKeyPress} autoFocus />
+            <button type="button" onClick={onClose}>X</button>
             {errorMessage && !ignoreError && <span>{errorMessage}</span>}
         </div>
     );
