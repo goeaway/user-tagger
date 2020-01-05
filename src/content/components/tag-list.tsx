@@ -6,9 +6,10 @@ import { ISiteUserService } from "../../common/abstract-types";
 export interface TagListProps {
     user: SiteUser;
     userService: ISiteUserService;
+    setRerender: () => void;
 }
 
-const TagList: React.FC<TagListProps> = ({ user, userService }) => {
+const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => {
     const [editing, setEditing] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
     const [tags, setTags] = React.useState(user ? user.tags : []);
@@ -28,6 +29,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
             const updatedTags = tags.concat({name: value, rules: [], backgroundColor: "#000", color: "#fff"});
             userService.updateUserTagList(user.username, updatedTags);
             setTags(updatedTags);
+            setRerender();
         } else {
             setErrorMsg("Tag already on this user");
         }
