@@ -2,6 +2,7 @@ import * as React from "react";
 import { UserTag, SiteUser } from "../../common/types";
 import TagInput from "./tag-input";
 import { ISiteUserService } from "../../common/abstract-types";
+import Tag from "./tag";
 
 export interface TagListProps {
     user: SiteUser;
@@ -19,6 +20,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
 
     const tagInputCloseHandler = () => {
         setEditing(false);
+        setErrorMsg(undefined);
     }
 
     const tagInputEnterPressedHandler = (value: string) => {
@@ -28,6 +30,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
             const updatedTags = tags.concat({name: value, rules: [], backgroundColor: "#000", color: "#fff"});
             userService.updateUserTagList(user.username, updatedTags);
             setTags(updatedTags);
+            setErrorMsg(undefined);
         } else {
             setErrorMsg("Tag already on this user");
         }
@@ -41,9 +44,12 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
 
     return (
         <div className="user-tagger__tag-list">
-            {tags && tags.map(t => <span key={t.name} className="user-tagger__tag" style={{backgroundColor: t.backgroundColor, color: t.color}}>{t.name}<button type="button" className="user-tagger__tag__close-button" style={{color: t.color}} onClick={() => handleTagRemove(t.name)}>x</button></span>)}
+            {tags && tags.map(t => <Tag tag={t} handleTagRemove={handleTagRemove} key={t.name}/>)}
             {editing ? 
-            <TagInput onClose={tagInputCloseHandler} onEnterPressed={tagInputEnterPressedHandler} errorMessage={errorMsg} />
+            <TagInput 
+                onClose={tagInputCloseHandler} 
+                onEnterPressed={tagInputEnterPressedHandler} 
+                errorMessage={errorMsg} />
             :
             <button type="button" className="user-tagger__tag-button" onClick={tagButtonHandler}>+</button>
             }
