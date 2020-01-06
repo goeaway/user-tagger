@@ -7,9 +7,10 @@ import Tag from "./tag";
 export interface TagListProps {
     user: SiteUser;
     userService: ISiteUserService;
+    setRerender: () => void;
 }
 
-const TagList: React.FC<TagListProps> = ({ user, userService }) => {
+const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => {
     const [editing, setEditing] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
     const [tags, setTags] = React.useState(user ? user.tags : []);
@@ -31,6 +32,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService }) => {
             userService.updateUserTagList(user.username, updatedTags);
             setTags(updatedTags);
             setErrorMsg(undefined);
+            setRerender();
         } else {
             setErrorMsg("Tag already on this user");
         }
