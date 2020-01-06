@@ -10,7 +10,6 @@ export default class SiteUserService implements ISiteUserService {
         ];
     }
 
-
     getAll: () => SiteUser[];   
     get: (site?: Site, tags?: UserTag[]) => SiteUser[];
     getOne = (username?: string, site?: Site, tags?: Array<UserTag>) : SiteUser => {
@@ -26,7 +25,12 @@ export default class SiteUserService implements ISiteUserService {
         // update the tags on the existing item in the store
         // or create a new item in the store
         if(userInStore) {
-            userInStore.tags = tags;
+            if(userInStore.tags) {
+                userInStore.tags.concat(tags);
+            } else {
+                userInStore.tags = tags;
+            }
+
         } else {
             this._userStore.push({ username, tags});
         }

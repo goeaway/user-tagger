@@ -38,9 +38,7 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
                 // change this so the user tagger stuff is removed as well?
                 // or change it so it doesn't get that in the first place...
                 const extractedUsername = extractionService.extract(commentElement.innerHTML);
-    
                 const user = siteUserService.getOne(extractedUsername, currentSite);
-                debugger;
 
                 portals.push(createPortal(
                     <TagList user={user} userService={siteUserService} setRerender={() => setRerender(true)} />,

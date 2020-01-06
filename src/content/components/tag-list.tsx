@@ -12,7 +12,7 @@ export interface TagListProps {
 
 const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => {
     const [editing, setEditing] = React.useState(false);
-    const [errorMsg, setErrorMsg] = React.useState("");
+    const [errorMsg, setErrorMsg] = React.useState();
     const [tags, setTags] = React.useState(user ? user.tags : []);
 
     const tagButtonHandler = () => {
