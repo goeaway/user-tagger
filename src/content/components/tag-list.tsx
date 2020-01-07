@@ -7,10 +7,10 @@ import Tag from "./tag";
 export interface TagListProps {
     user: SiteUser;
     userService: ISiteUserService;
-    setRerender: () => void;
+    onTagAdded: (username: string) => void;
 }
 
-const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => {
+const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded }) => {
     const [editing, setEditing] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState();
     const [tags, setTags] = React.useState(user ? user.tags : []);
@@ -29,10 +29,10 @@ const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => 
         if(!tags.some(t => t.name === value)) {
             setEditing(false);
             const updatedTags = tags.concat({name: value, rules: [], backgroundColor: "#000", color: "#fff"});
-            userService.updateUserTagList(user.username, updatedTags);
+            userService.updateUserTags(user.username, updatedTags);
             setTags(updatedTags);
             setErrorMsg(undefined);
-            setRerender();
+            onTagAdded(user.username);
         } else {
             setErrorMsg("Tag already on this user");
         }
@@ -40,7 +40,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService, setRerender }) => 
 
     const handleTagRemove = (name: string) => {
         const updatedTags = tags.filter(t => t.name !== name);
-        userService.updateUserTagList(user.username, updatedTags);
+        userService.updateUserTags(user.username, updatedTags);
         setTags(updatedTags);
     }
 

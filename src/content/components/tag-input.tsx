@@ -10,9 +10,6 @@ const TagInput: React.FC<TagInputProps> = ({ onClose, onEnterPressed, errorMessa
     const [value, setValue] = React.useState("");
     const [ignoreError, setIgnoreError] = React.useState(false);
 
-    React.useEffect(() => {
-    }, [ignoreError]);
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
         if(!ignoreError) {

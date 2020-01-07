@@ -13,59 +13,51 @@ export interface ContentAppProps {
 
 const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, extractionService }) => {
     const [rerender, setRerender] = React.useState(false);
+    const currentSite = siteService.getCurrentSite();
+    const commentElements = [].slice.call(document.querySelectorAll(currentSite.userIdentElementSelector)) as Array<Element>;
+    
+    React.useEffect(() => {
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for(let i = 0; i < mutation.addedNodes.length; i++) {
+                    debugger;
+                    // check that at least one of the nodes added are of the type that would hold a comment and then force an update if so
+                }
+            })
+        });
+        
+        var config = { attributes: true, childList: true, characterData: true };
+        
+        observer.observe(document.querySelector(currentSite.commentSectionContainer), config);
+
+        return () => observer.disconnect();
+    }, []);
 
     React.useEffect(() => {
         if(rerender) {
             setRerender(false);
         }
-    }, [rerender])
+    }, [rerender]);
 
-    // first thing to do is figure out if we're on a site that we support (either default (reddit, youtube, twitter, etc) or user defined)
-    if(siteService.locationSupported()) {
-        const currentSite = siteService.getCurrentSite();
+    const onTagAddedHandler = (username: string) => {
+        setRerender(true);
+    };
 
-        const createTags = () => {
-            const commentElements = document.querySelectorAll(currentSite.userIdentElementSelector);
-            const portals: React.ReactPortal[] = [];
-            for(let i = 0; i < commentElements.length; i++) {
-                const commentElement = commentElements[i];
-    
-                const anchorElement = getElementParent(commentElement, currentSite.userIdentElementParentAnchorIndex);
-    
-                // if the anchor already has a component we don't want to add a another one
-                // but might want to check for any new tags for that user
-
-                // change this so the user tagger stuff is removed as well?
-                // or change it so it doesn't get that in the first place...
-                const extractedUsername = extractionService.extract(commentElement.innerHTML);
-                const user = siteUserService.getOne(extractedUsername, currentSite);
-
-                portals.push(createPortal(
-                    <TagList user={user} userService={siteUserService} setRerender={() => setRerender(true)} />,
-                    anchorElement,
-                    "user" + i
-                ));
-            }
-
-            return portals;
-        };
-
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                for(let i = 0; i < mutation.addedNodes.length; i++) {
-                    debugger;
-                }
-            })
-        });
-
-        var config = { attributes: true, childList: true, characterData: true };
-
-        observer.observe(document.querySelector(currentSite.commentSectionContainer), config);
-
-        return <React.Fragment>{createTags()}</React.Fragment>;
-    }
-
-    return null;
+    return (
+        <React.Fragment>
+            {commentElements.map((ce, index) => {
+                const anchor = getElementParent(ce, currentSite.userIdentElementParentAnchorIndex);
+                const extractedUsername = extractionService.extract(ce.innerHTML);
+                const user = siteUserService.getUser(extractedUsername, currentSite);
+debugger;
+                return createPortal(
+                    <TagList user={user} userService={siteUserService} onTagAdded={onTagAddedHandler} />,
+                    anchor,
+                    "user" + index
+                );
+            })}
+        </React.Fragment>
+    );
 }
 
 export default ContentApp;
