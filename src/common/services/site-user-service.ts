@@ -18,21 +18,22 @@ export default class SiteUserService implements ISiteUserService {
         return existing || { username: username, tags: [] };
     };
 
+    getTags = (search: string) : Array<UserTag> => {
+        const allTags: Array<UserTag> = [];
+
+        this._userStore.forEach(u => allTags.concat(u.tags));
+
+        return allTags.filter(t => t.name.indexOf(search) > -1);
+    }
+
     updateUserTags = (username: string, tags: Array<UserTag>) => {
         const userInStore = this._userStore.find(u => u.username === username);
         // update the tags on the existing item in the store
         // or create a new item in the store
         if(userInStore) {
-            if(userInStore.tags) {
-                userInStore.tags.concat(tags);
-            } else {
                 userInStore.tags = tags;
-            }
-
         } else {
             this._userStore.push({ username, tags});
         }
-
-        console.dir(this._userStore);
     }
 }

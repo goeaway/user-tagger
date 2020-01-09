@@ -33,15 +33,13 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
         return () => observer.disconnect();
     }, []);
 
-    React.useEffect(() => {
-        if(rerender) {
-            setRerender(false);
-        }
-    }, [rerender]);
-
     const onTagAddedHandler = (username: string) => {
-        setRerender(true);
+        setRerender(!rerender);
     };
+
+    const onTagRemovedHandler = (username: string) => {
+        setRerender(!rerender);
+    }
 
     return (
         <React.Fragment>
@@ -49,9 +47,9 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
                 const anchor = getElementParent(ce, currentSite.userIdentElementParentAnchorIndex);
                 const extractedUsername = extractionService.extract(ce.innerHTML);
                 const user = siteUserService.getUser(extractedUsername, currentSite);
-debugger;
+
                 return createPortal(
-                    <TagList user={user} userService={siteUserService} onTagAdded={onTagAddedHandler} />,
+                    <TagList user={user} userService={siteUserService} onTagAdded={onTagAddedHandler} onTagRemoved={onTagRemovedHandler} />,
                     anchor,
                     "user" + index
                 );

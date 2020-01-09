@@ -8,12 +8,12 @@ export interface TagListProps {
     user: SiteUser;
     userService: ISiteUserService;
     onTagAdded: (username: string) => void;
+    onTagRemoved: (username: string) => void;
 }
 
-const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded }) => {
+const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagRemoved }) => {
     const [editing, setEditing] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState();
-    const [tags, setTags] = React.useState(user ? user.tags : []);
 
     const tagButtonHandler = () => {
         setEditing(true);
@@ -25,12 +25,16 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded }) => {
     }
 
     const tagInputEnterPressedHandler = (value: string) => {
+        if(!value || value.trim() == "") {
+            setErrorMsg("Enter something");
+            return;
+        }
+
         // if we don't already have one
-        if(!tags.some(t => t.name === value)) {
+        if(!user.tags.some(t => t.name === value)) {
             setEditing(false);
-            const updatedTags = tags.concat({name: value, rules: [], backgroundColor: "#000", color: "#fff"});
+            const updatedTags = user.tags.concat({name: value.trim(), rules: [], backgroundColor: "#000", color: "#fff"});
             userService.updateUserTags(user.username, updatedTags);
-            setTags(updatedTags);
             setErrorMsg(undefined);
             onTagAdded(user.username);
         } else {
@@ -39,19 +43,20 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded }) => {
     }
 
     const handleTagRemove = (name: string) => {
-        const updatedTags = tags.filter(t => t.name !== name);
+        const updatedTags = user.tags.filter(t => t.name !== name);
         userService.updateUserTags(user.username, updatedTags);
-        setTags(updatedTags);
+        onTagRemoved(user.username);
     }
 
     return (
         <div className="user-tagger__tag-list">
-            {tags && tags.map(t => <Tag tag={t} handleTagRemove={handleTagRemove} key={t.name}/>)}
+            {user && user.tags && user.tags.map(t => <Tag tag={t} handleTagRemove={handleTagRemove} key={t.name}/>)}
             {editing ? 
             <TagInput 
                 onClose={tagInputCloseHandler} 
                 onEnterPressed={tagInputEnterPressedHandler} 
-                errorMessage={errorMsg} />
+                errorMessage={errorMsg}
+                userService={userService} />
             :
             <button type="button" className="user-tagger__tag-button" onClick={tagButtonHandler}>+</button>
             }
