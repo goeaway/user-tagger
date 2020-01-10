@@ -8,13 +8,17 @@ export interface TagSuggestionListProps {
 
 const TagSuggestionList: React.FC<TagSuggestionListProps> = ({ search, userService }) => {
     const filteredTags = userService.getTags(search);
-
     return (
-        <div className="user-tagger__tag-input__tag-suggestions">
-            <ul>
-                {filteredTags.map(t => <li key={t.name}>{t.name}</li>)}
-            </ul>
-        </div>
+        <React.Fragment>
+        {
+            filteredTags.length > 0 && 
+            <div className="user-tagger__tag-input__tag-suggestions">
+                <ul className="user-tagger__tag-input__tag-suggestions__list">
+                    {filteredTags.map(t => <li className="user-tagger__tag-input__tag-suggestions__list__item" key={t.name}>{t.name}</li>)}
+                </ul>
+            </div>
+        }
+        </React.Fragment>
     );
 }
 

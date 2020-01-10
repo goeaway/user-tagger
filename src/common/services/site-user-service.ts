@@ -19,9 +19,13 @@ export default class SiteUserService implements ISiteUserService {
     };
 
     getTags = (search: string) : Array<UserTag> => {
-        const allTags: Array<UserTag> = [];
+        if(!search) {
+            return [];
+        }
 
-        this._userStore.forEach(u => allTags.concat(u.tags));
+        let allTags: Array<UserTag> = [];
+
+        this._userStore.forEach(u => allTags = allTags.concat(u.tags));
 
         return allTags.filter(t => t.name.indexOf(search) > -1);
     }
