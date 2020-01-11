@@ -1,6 +1,7 @@
 import * as React from "react";
 import TagSuggestionList from "./tag-suggestion-list";
 import { ISiteUserService } from "../../common/abstract-types";
+import { UserTag, UserTagSuggestion } from "../../common/types";
 
 export interface TagInputProps {
     onClose: () => void;
@@ -37,10 +38,23 @@ const TagInput: React.FC<TagInputProps> = ({ onClose, onEnterPressed, errorMessa
     }
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === "Enter") {
-            confirmClickHandler();
-        } else if (event.key === "Escape") {
-            cancelClickHandler();
+        switch(event.key) {
+            case "Enter": {
+                confirmClickHandler();
+                break;
+            }
+            case "Escape": {
+                cancelClickHandler();
+                break;
+            }
+            case "ArrowDown": {
+                // go to the next suggestion (if there's one to go to)
+                break;
+            }
+            case "ArrowUp": {
+                // go to the previous suggestion (if there's one to go to)
+                break;
+            }
         }
     }
     
@@ -53,14 +67,19 @@ const TagInput: React.FC<TagInputProps> = ({ onClose, onEnterPressed, errorMessa
         onClose();
         setIgnoreError(false);
     }
-    
+
+    const suggestionListItemClickedHandler = (tag: UserTag) => {
+        onEnterPressed(tag.name);
+        setIgnoreError(false);
+    }
+
     return (
-        <div className="user-tagger__tag-input" ref={outsideClickRef}>
-            <input type="text" value={value} onChange={handleChange} placeholder="Start typing to find existing or create new..." onKeyDown={handleKeyPress} autoFocus />
+        <div className="user-tagger__tag-input" ref={outsideClickRef} onKeyDown={handleKeyPress}>
+            <input type="text" value={value} onChange={handleChange} placeholder="Start typing to find existing or create new..." autoFocus />
             <button className="user-tagger__tag-button" onClick={confirmClickHandler}>Y</button>
             <button className="user-tagger__tag-button" onClick={cancelClickHandler}>X</button>
             {errorMessage && !ignoreError && <span className="user-tagger__tag-input__error">{errorMessage}</span>}
-            <TagSuggestionList search={value} userService={userService} />
+            <TagSuggestionList search={value} userService={userService} onSuggestionClicked={suggestionListItemClickedHandler} />
         </div>
     );
 }

@@ -62,3 +62,8 @@ export interface UserTag {
 export interface TagRule {
     name: string;
 }
+
+export interface UserTagSuggestion {
+    tag: UserTag;
+    selected: boolean;
+}
