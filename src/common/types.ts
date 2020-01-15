@@ -52,8 +52,8 @@ export interface SiteUser {
 export interface UserTag {
     name: string;
     rules: Array<TagRule>;
-    backgroundColor: string;
-    color: string;
+    backgroundColor: RGB;
+    color: RGB;
 }
 
 /**
@@ -66,4 +66,24 @@ export interface TagRule {
 export interface UserTagSuggestion {
     tag: UserTag;
     selected: boolean;
+}
+
+export interface RGB {
+    R: number;
+    G: number;
+    B: number;
+}
+
+export class RGBExtensions {
+    static getStringForCss = (rgb: RGB) : string => {
+        return `rgb(${rgb.R},${rgb.G},${rgb.B})`;
+    }
+
+    static black = () : RGB => {
+        return { R: 0, G: 0, B: 0 };
+    }
+
+    static white = () : RGB => {
+        return { R: 255, G: 255, B: 255 };
+    }
 }

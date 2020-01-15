@@ -1,12 +1,12 @@
 import { ISiteUserService } from "../abstract-types";
-import { SiteUser, Site, UserTag } from "../types";
+import { SiteUser, Site, UserTag, RGBExtensions } from "../types";
 
 export default class SiteUserService implements ISiteUserService {
     private _userStore: Array<SiteUser>;
 
     constructor() {
         this._userStore = [
-            { username: "username2", tags: [{ name: "twat", rules: [], backgroundColor: "#000", color: "#fff"}] }
+            { username: "username2", tags: [{ name: "twat", rules: [], backgroundColor: RGBExtensions.black(), color: RGBExtensions.white()}] }
         ];
     }
 

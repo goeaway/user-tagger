@@ -9,7 +9,7 @@ export interface TagSuggestionListProps {
     onSuggestionClicked: (tag: UserTag) => void;
 }
 
-const TagSuggestionList: React.FC<TagSuggestionListProps> = ({ search, userService, onSuggestionClicked: onItemClicked }) => {
+const TagSuggestionList: React.FC<TagSuggestionListProps> = ({ search, userService, onSuggestionClicked }) => {
     const filteredTags = userService.getTags(search);
 
     return (
@@ -18,7 +18,7 @@ const TagSuggestionList: React.FC<TagSuggestionListProps> = ({ search, userServi
             filteredTags.length > 0 && 
             <div className="user-tagger__tag-input__tag-suggestions">
                 <ul className="user-tagger__tag-input__tag-suggestions__list">
-                    {filteredTags.map(t => <TagSuggestionListItem tag={t} onItemClicked={onItemClicked} />)}
+                    {filteredTags.map(t => <TagSuggestionListItem tag={t} onItemClicked={onSuggestionClicked} />)}
                 </ul>
             </div>
         }

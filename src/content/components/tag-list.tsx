@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserTag, SiteUser } from "../../common/types";
+import { UserTag, SiteUser, RGB, RGBExtensions } from "../../common/types";
 import TagInput from "./tag-input";
 import { ISiteUserService } from "../../common/abstract-types";
 import Tag from "./tag";
@@ -24,16 +24,16 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
         setErrorMsg(undefined);
     }
 
-    const tagInputEnterPressedHandler = (value: string) => {
-        if(!value || value.trim() == "") {
+    const tagInputConfirmHandler = (tag: UserTag) => {
+        if(!tag.name || tag.name.trim() == "") {
             setErrorMsg("Enter something");
             return;
         }
 
         // if we don't already have one
-        if(!user.tags.some(t => t.name === value)) {
+        if(!user.tags.some(t => t.name === tag.name)) {
             setEditing(false);
-            const updatedTags = user.tags.concat({name: value.trim(), rules: [], backgroundColor: "#000", color: "#fff"});
+            const updatedTags = user.tags.concat(tag);
             userService.updateUserTags(user.username, updatedTags);
             setErrorMsg(undefined);
             onTagAdded(user.username);
@@ -50,11 +50,11 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
 
     return (
         <div className="user-tagger__tag-list">
-            {user && user.tags && user.tags.map(t => <Tag tag={t} handleTagRemove={handleTagRemove} key={t.name}/>)}
+            {user && user.tags && user.tags.map(t => <Tag tag={t} onTagRemove={handleTagRemove} key={t.name}/>)}
             {editing ? 
             <TagInput 
                 onClose={tagInputCloseHandler} 
-                onEnterPressed={tagInputEnterPressedHandler} 
+                onConfirm={tagInputConfirmHandler} 
                 errorMessage={errorMsg}
                 userService={userService} />
             :
