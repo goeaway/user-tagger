@@ -1,9 +1,9 @@
 import * as React from "react";
-import { UserTag, SiteUser, RGB, RGBExtensions } from "../../common/types";
-import TagInput from "./tag-input";
+import { UserTag, SiteUser, RGBExtensions } from "../../common/types";
 import { ISiteUserService } from "../../common/abstract-types";
 import Tag from "./tag";
 import { getRandomTagName, getRandomRGBValue } from "../utils/randomisations";
+import { v1 } from "uuid";
 
 export interface TagListProps {
     user: SiteUser;
@@ -18,7 +18,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
         // add a new tag to the list and set it to isNew
         const newTag: UserTag = 
         { 
-            id: "",
+            id: v1(),
             name: getRandomTagName(), 
             rules: [], 
             backgroundColor: getRandomRGBValue(), 
@@ -30,8 +30,8 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
         onTagAdded(user.username);
     };
 
-    const handleTagRemove = (name: string) => {
-        const updatedTags = user.tags.filter(t => t.name !== name);
+    const handleTagRemove = (id: string) => {
+        const updatedTags = user.tags.filter(t => t.id !== id);
         userService.updateUserTags(user.username, updatedTags);
         onTagRemoved(user.username);
     }
@@ -56,7 +56,7 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
                     tag={t} 
                     onTagChange={handleTagChange} 
                     onTagRemove={handleTagRemove} 
-                    key={t.name}
+                    key={t.id}
                 />
             )}
             <button 

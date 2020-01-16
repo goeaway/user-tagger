@@ -1,11 +1,7 @@
 import * as React from "react";
-import TagSuggestionList from "./tag-suggestion-list";
-import { ISiteUserService } from "../../common/abstract-types";
-import { UserTag, UserTagSuggestion, RGB, RGBExtensions } from "../../common/types";
+import { UserTag, RGB } from "../../common/types";
 import TagColorPicker from "./tag-color-picker";
-import Tag from "./tag";
 import TagCreationOption from "./tag-creation-option";
-import { getRandomRGBValue, getRandomTagName } from "../utils/randomisations";
 import { elementContainsElement } from "../utils/element-utils"
 
 export interface TagInputProps {
@@ -15,10 +11,9 @@ export interface TagInputProps {
     tag?: UserTag;
 }
 
-const TagInput: React.FC<TagInputProps> = ({ tag, isCreate, onTagChange, onClose }) => {
+const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose }) => {
     const containerRef = React.useRef();
     const [expandedOption, setExpandedOption] = React.useState(0);
-
     // adds event handler to close input when click outside of comp occurs
     React.useEffect(() => {
         const eventListener = (event: any) => {
@@ -84,7 +79,6 @@ const TagInput: React.FC<TagInputProps> = ({ tag, isCreate, onTagChange, onClose
 
     return (
         <div className="user-tagger__tag-input" ref={containerRef} onKeyDown={handleKeyPress}>
-            {/* <TagSuggestionList search={newTag.name} userService={userService} onSuggestionClicked={suggestionListItemClickedHandler} /> */}
             <div className="user-tagger__tag-input__tag-options">
                 <TagCreationOption optionId={0} expanded={expandedOption === 0} title={"Text"} onCollapseClicked={creationOptionCollapseClickedHandler}>
                     <input type="text" value={tag.name} onChange={handleChange} placeholder="Tag Text..." autoFocus />
