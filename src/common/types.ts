@@ -50,6 +50,7 @@ export interface SiteUser {
  * Represents a tag an extension user would apply to a site user
  */
 export interface UserTag {
+    id: string;
     name: string;
     rules: Array<TagRule>;
     backgroundColor: RGB;
