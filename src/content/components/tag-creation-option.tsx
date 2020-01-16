@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 export interface TagCreationOptionProps {
     expanded: boolean;
     optionId: number;
@@ -12,7 +12,7 @@ const TagCreationOption: React.FC<TagCreationOptionProps> = ({ title, expanded, 
         <div className={"user-tagger__tag-input__creation-option" + (expanded ? " user-tagger__tag-input__creation-option--expanded" : "")}>
             <div className="user-tagger__tag-input__creation-option__header" onClick={() => onCollapseClicked(optionId, expanded)}>
                 <span className="user-tagger__tag-input__creation-option__title">{title}</span>
-                <span>{expanded ? "up" : "down"}</span>
+                {expanded ? <FaChevronUp /> : <FaChevronDown />}
             </div>
             {expanded && <div className="user-tagger__tag-input__creation-option__content">{children}</div>}
         </div>

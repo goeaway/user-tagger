@@ -14,6 +14,9 @@ export interface TagInputProps {
 const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose }) => {
     const containerRef = React.useRef();
     const [expandedOption, setExpandedOption] = React.useState(0);
+    const [beAbove, setBeAbove] = React.useState(false);
+    const [beRight, setBeRight] = React.useState(false);
+    
     // adds event handler to close input when click outside of comp occurs
     React.useEffect(() => {
         const eventListener = (event: any) => {
@@ -78,21 +81,19 @@ const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose }) => {
     }
 
     return (
-        <div className="user-tagger__tag-input" ref={containerRef} onKeyDown={handleKeyPress}>
-            <div className="user-tagger__tag-input__tag-options">
-                <TagCreationOption optionId={0} expanded={expandedOption === 0} title={"Text"} onCollapseClicked={creationOptionCollapseClickedHandler}>
-                    <input type="text" value={tag.name} onChange={handleChange} placeholder="Tag Text..." autoFocus />
-                </TagCreationOption>
+        <div className="user-tagger__tag-input user-tagger__tag-input--beneath user-tagger__tag-input--left" ref={containerRef} onKeyDown={handleKeyPress}>
+            <TagCreationOption optionId={0} expanded={expandedOption === 0} title={"Text"} onCollapseClicked={creationOptionCollapseClickedHandler}>
+                <input type="text" value={tag.name} onChange={handleChange} placeholder="Tag Text..." autoFocus />
+            </TagCreationOption>
 
-                <TagCreationOption optionId={1} expanded={expandedOption === 1} title={"Tag Color"} onCollapseClicked={creationOptionCollapseClickedHandler}>
-                    <TagColorPicker onValueChanged={tagColorChangeHandler} initialValues={tag.backgroundColor} />
-                </TagCreationOption>
+            <TagCreationOption optionId={1} expanded={expandedOption === 1} title={"Tag Color"} onCollapseClicked={creationOptionCollapseClickedHandler}>
+                <TagColorPicker onValueChanged={tagColorChangeHandler} initialValues={tag.backgroundColor} />
+            </TagCreationOption>
 
-                <TagCreationOption optionId={2} expanded={expandedOption === 2} title={"Text Color"} onCollapseClicked={creationOptionCollapseClickedHandler}>
-                    <TagColorPicker onValueChanged={textColorChangeHandler} initialValues={tag.color} />
-                </TagCreationOption>
-                {/** Another one for rules at some point */}
-            </div>
+            <TagCreationOption optionId={2} expanded={expandedOption === 2} title={"Text Color"} onCollapseClicked={creationOptionCollapseClickedHandler}>
+                <TagColorPicker onValueChanged={textColorChangeHandler} initialValues={tag.color} />
+            </TagCreationOption>
+            {/** Another one for rules at some point */}
         </div>
     );
 }
