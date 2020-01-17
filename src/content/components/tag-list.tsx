@@ -1,18 +1,23 @@
 import * as React from "react";
 import { UserTag, SiteUser, RGBExtensions } from "../../common/types";
-import { ISiteUserService } from "../../common/abstract-types";
 import Tag from "./tag";
 import { getRandomTagName, getRandomRGBValue } from "../utils/randomisations";
 import { v1 } from "uuid";
+import SiteUserServiceContext from "../context/site-user-service-context";
 
 export interface TagListProps {
+    listIndex: number;
     user: SiteUser;
-    userService: ISiteUserService;
-    onTagAdded: (username: string) => void;
+    tags: Array<UserTag>;
+    onTagAdded: (username: string, listIndex: number) => void;
     onTagRemoved: (username: string) => void;
+    onTagClick?: (tag: UserTag) => void;
+    editLast?: boolean;
+    preview?: boolean;
 }
 
-const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagRemoved }) => {
+const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, onTagRemoved, onTagClick, editLast, preview }) => {
+    const userService = React.useContext(SiteUserServiceContext);
     
     const tagButtonHandler = () => {
         // add a new tag to the list and set it to isNew
@@ -25,19 +30,19 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
             color: RGBExtensions.white()
         };
 
-        const updatedTags = user.tags.concat(newTag);
+        const updatedTags = tags.concat(newTag);
         userService.updateUserTags(user.username, updatedTags);
-        onTagAdded(user.username);
+        onTagAdded(user.username, listIndex);
     };
 
     const handleTagRemove = (id: string) => {
-        const updatedTags = user.tags.filter(t => t.id !== id);
+        const updatedTags = tags.filter(t => t.id !== id);
         userService.updateUserTags(user.username, updatedTags);
         onTagRemoved(user.username);
     }
 
     const handleTagChange = (newTag: UserTag) => {
-        const existing = user.tags.find(t => t.id === newTag.id);
+        const existing = tags.find(t => t.id === newTag.id);
         if(existing) {
             existing.name = newTag.name;
             existing.rules = newTag.rules;
@@ -45,26 +50,48 @@ const TagList: React.FC<TagListProps> = ({ user, userService, onTagAdded, onTagR
             existing.color = newTag.color;
         }
 
-        userService.updateUserTags(user.username, user.tags);
-        onTagAdded(user.username);
+        userService.updateUserTags(user.username, tags);
+        // -1 because we don't want the last tag in this list to open
+        onTagAdded(user.username, -1);
+    }
+
+    const handleTagSwap = (oldTag: UserTag, newTag: UserTag) => {
+        const oldTagIndex = tags.indexOf(oldTag);
+
+        if(oldTagIndex > -1) {
+            tags[oldTagIndex] = newTag;
+        }
+
+        userService.updateUserTags(user.username, tags);
+        // -1 because we don't want the last tag in this list to open
+        onTagAdded(user.username, -1);
     }
 
     return (
         <div className="user-tagger__tag-list">
-            {user && user.tags && user.tags.map(t => 
-                <Tag 
-                    tag={t} 
-                    onTagChange={handleTagChange} 
-                    onTagRemove={handleTagRemove} 
-                    key={t.id}
-                />
-            )}
-            <button 
-                type="button" 
-                className="user-tagger__tag-button" 
-                onClick={tagButtonHandler}>
-                    +
-            </button>
+            <div className="user-tagger__tag-list__inner">
+                {tags && tags.map((t, index) => 
+                    <Tag 
+                        tag={t} 
+                        onTagChange={handleTagChange} 
+                        onTagSwap={handleTagSwap}
+                        onTagRemove={handleTagRemove} 
+                        key={t.id}
+                        startEditing={index === user.tags.length -1 && editLast}
+                        user={user}
+                        onPreviewClick={preview && onTagClick}
+                    />
+                )}
+                {
+                    !preview && !onTagClick && 
+                    <button 
+                        type="button" 
+                        className="user-tagger__tag-button" 
+                        onClick={tagButtonHandler}>
+                            +
+                    </button>
+                }
+            </div>
         </div>
     );
 }

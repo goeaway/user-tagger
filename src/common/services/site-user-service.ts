@@ -19,16 +19,19 @@ export default class SiteUserService implements ISiteUserService {
         return existing || { username: username, tags: [] };
     };
 
-    getTags = (search: string) : Array<UserTag> => {
-        if(!search) {
-            return [];
-        }
-
+    getTagsNotFoundOnUser = (excludingUser?: SiteUser, search?: string) : Array<UserTag> => {
         let allTags: Array<UserTag> = [];
 
         this._userStore.forEach(u => allTags = allTags.concat(u.tags));
+        if(excludingUser) {
+            allTags = allTags.filter(t => !excludingUser.tags.some(ex => ex.id === t.id));
+        }
 
-        return allTags.filter(t => t.name.indexOf(search) > -1);
+        if(search) {
+            allTags = allTags.filter(t => t.name.indexOf(search) > -1)
+        }
+
+        return allTags;
     }
 
     updateUserTags = (username: string, tags: Array<UserTag>) => {

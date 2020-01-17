@@ -1,22 +1,32 @@
 import * as React from "react";
-import { UserTag, RGBExtensions } from "../../common/types";
+import { UserTag, RGBExtensions, SiteUser } from "../../common/types";
 import TagInput from "./tag-input";
 
 export interface TagProps {
+    user: SiteUser;
     tag: UserTag;
     onTagChange: (tag: UserTag) => void;
+    onTagSwap: (oldTag: UserTag, newTag: UserTag) => void;
     onTagRemove: (tagName: string) => void;
+    startEditing?: boolean;
+    onPreviewClick?: (tag: UserTag) => void;
 }
 
-const Tag : React.FC<TagProps> = ({ tag, onTagRemove, onTagChange }) => {
-    const [editing, setEditing] = React.useState(false);
+const Tag : React.FC<TagProps> = ({ user, tag, onTagRemove, onTagChange, onTagSwap, startEditing, onPreviewClick }) => {
+    const [editing, setEditing] = React.useState((startEditing && !onPreviewClick) || false);
 
     const handleTagClick = () => {
-        setEditing(true);
+        if(!onPreviewClick) {
+            setEditing(true);
+        } else {
+            onPreviewClick(tag);
+        }
     };
 
     const handleClose = () => {
-        setEditing(false);
+        if(!onPreviewClick) {
+            setEditing(false);
+        }
     }
 
     return (
@@ -28,7 +38,7 @@ const Tag : React.FC<TagProps> = ({ tag, onTagRemove, onTagChange }) => {
                     &times;
                 </button>
             </span>
-            {editing && <TagInput tag={tag} isCreate={false} onTagChange={onTagChange} onClose={handleClose} />}
+            {editing && <TagInput tag={tag} onTagChange={onTagChange} onTagSwap={onTagSwap} onClose={handleClose} user={user}/>}
         </span>
     );
 }

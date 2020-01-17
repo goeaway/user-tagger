@@ -16,14 +16,8 @@ if(siteService.locationSupported()) {
 
     document.body.append(root);
 
-    const siteUserService = new SiteUserService();
-    const extractionService = new UsernameExtractionService();
-
     ReactDOM.render(
-        <ContentApp 
-            siteService={siteService}
-            siteUserService={siteUserService}
-            extractionService={extractionService} />,
+        <ContentApp siteService={siteService} />,
         root
     );
 }

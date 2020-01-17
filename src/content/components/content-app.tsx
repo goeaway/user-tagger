@@ -4,17 +4,21 @@ import { getElementParent } from "../../common/utils/parent-element-indexer";
 import { createPortal, } from "react-dom";
 import TagList from "../components/tag-list";
 import "../styles/structure.less";
+import SiteUserServiceContext from "../context/site-user-service-context";
+import UsernameExtractionServiceContext from "../context/username-extraction-service-context";
 
 export interface ContentAppProps {
     siteService: ISiteService;
-    siteUserService: ISiteUserService;
-    extractionService: IUsernameExtractionService;
 }
 
-const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, extractionService }) => {
+const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
+    const siteUserService = React.useContext(SiteUserServiceContext);
+    const extractionService = React.useContext(UsernameExtractionServiceContext);
+
     const [rerender, setRerender] = React.useState(false);
     const currentSite = siteService.getCurrentSite();
     const commentElements = [].slice.call(document.querySelectorAll(currentSite.userIdentElementSelector)) as Array<Element>;
+    const [tagListJustAddedTo, setTagListJustAddedTo] = React.useState(-1);
     
     React.useEffect(() => {
         const observer = new MutationObserver(mutations => {
@@ -33,8 +37,13 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
         return () => observer.disconnect();
     }, []);
 
-    const onTagAddedHandler = (username: string) => {
-        setRerender(!rerender);
+    const onTagAddedHandler = (username: string, listIndex: number) => {
+        // use of if to avoid unnecessary rerendering
+        if(listIndex === tagListJustAddedTo) {
+            setRerender(!rerender);
+        } else {
+            setTagListJustAddedTo(listIndex)
+        }
     };
 
     const onTagRemovedHandler = (username: string) => {
@@ -49,7 +58,7 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService, siteUserService, e
                 const user = siteUserService.getUser(extractedUsername, currentSite);
 
                 return createPortal(
-                    <TagList user={user} userService={siteUserService} onTagAdded={onTagAddedHandler} onTagRemoved={onTagRemovedHandler} />,
+                    <TagList listIndex={index} user={user} tags={user.tags} onTagAdded={onTagAddedHandler} editLast={tagListJustAddedTo === index} onTagRemoved={onTagRemovedHandler} />,
                     anchor,
                     "user" + index
                 );
