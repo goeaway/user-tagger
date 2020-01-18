@@ -35,3 +35,15 @@ export const elementContainsElementWithSelector = (element: any, elementSelector
 
     return false;
 }
+
+export const elementIsInViewport = (element: Element) : Boolean => {
+    const boundRect = element.getBoundingClientRect();
+    return boundRect.top >= 0 && 
+        boundRect.left >= 0 && 
+        boundRect.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+        boundRect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+}
+
+export const getElementsInViewport = (querySelector: string) : Array<Element> => {
+    return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(elementIsInViewport);
+}
