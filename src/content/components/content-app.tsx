@@ -6,8 +6,10 @@ import TagList from "../components/tag-list";
 import "../styles/structure.less";
 import SiteUserServiceContext from "../context/site-user-service-context";
 import UsernameExtractionServiceContext from "../context/username-extraction-service-context";
-import { elementContainsElementWithSelector, getElementsInViewport } from "../utils/element-utils";
-import { v1 } from "uuid";
+import { getElementsInViewport } from "../utils/element-utils";
+import { v1 as newGuid } from "uuid";
+import useElementAddedMutationEffect from "../hooks/use-element-added-mutation-effect";
+import useElementScrolledInOrOutEffect from "../hooks/use-element-scrolled-in-or-out-effect";
 
 export interface ContentAppProps {
     siteService: ISiteService;
@@ -19,56 +21,31 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
 
     const [rerender, setRerender] = React.useState();
     const currentSite = siteService.getCurrentSite();
-    // filter this collection so we only get back the ones visible in the viewport 
     const commentElements = getElementsInViewport(currentSite.userIdentElementSelector);
     const [tagListJustAddedTo, setTagListJustAddedTo] = React.useState(-1);
     
-    React.useEffect(() => {
-        const scrollEvent = (event) => {
-            // every time comment is scrolled into view we should rerender
+    useElementScrolledInOrOutEffect(
+        currentSite.userIdentElementSelector,
+        () => setRerender(newGuid())
+    );
 
-            // if any node in "getElementsInViewport(currentSite.userIdentElementSelector);" list does not contain the user tagger div in it already
-            // if any node with user tagger already is scrolled out of view we should re render
-            // we should rerender
-        };
-
-        window.addEventListener("scroll", scrollEvent);
-
-        return () => window.removeEventListener("scroll", scrollEvent);
-    });
-
-    React.useEffect(() => {
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                for(let i = 0; i < mutation.addedNodes.length; i++) {
-                    const addedNode = mutation.addedNodes[i];
-                    // if the addedNode contains the currentSite.userIdentElementSelector we need to rerender
-                    if (elementContainsElementWithSelector(addedNode, currentSite.userIdentElementSelector)) {
-                        setRerender(v1());
-                        return;
-                    }
-                }
-            })
-        });
-        
-        var config = { attributes: true, childList: true, characterData: true };
-        
-        observer.observe(document.querySelector(currentSite.commentSectionContainer), config);
-
-        return () => observer.disconnect();
-    }, []);
+    useElementAddedMutationEffect(
+        document.querySelector(currentSite.commentSectionContainer),
+        currentSite.userIdentElementSelector,
+        () => setRerender(newGuid())
+    );
 
     const onTagAddedHandler = (username: string, listIndex: number) => {
         // use of if to avoid unnecessary rerendering
         if(listIndex === tagListJustAddedTo) {
-            setRerender(v1());
+            setRerender(newGuid());
         } else {
             setTagListJustAddedTo(listIndex)
         }
     };
 
     const onTagRemovedHandler = () => {
-        setRerender(v1());
+        setRerender(newGuid());
     }
 
     return (
@@ -79,7 +56,14 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
                 const user = siteUserService.getUser(extractedUsername, currentSite);
 
                 return createPortal(
-                    <TagList listIndex={index} user={user} tags={user.tags} onTagAdded={onTagAddedHandler} editLast={tagListJustAddedTo === index} onTagRemoved={onTagRemovedHandler} />,
+                    <TagList 
+                        listIndex={index} 
+                        user={user} 
+                        tags={user.tags} 
+                        onTagAdded={onTagAddedHandler} 
+                        onTagRemoved={onTagRemovedHandler} 
+                        editLast={tagListJustAddedTo === index} 
+                    />,
                     anchor,
                     "user" + index
                 );

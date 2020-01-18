@@ -36,14 +36,32 @@ export const elementContainsElementWithSelector = (element: any, elementSelector
     return false;
 }
 
-export const elementIsInViewport = (element: Element) : Boolean => {
+export const elementIsInViewport = (element: Element) : boolean => {
+    // add some pixels for leeway so we aren't rendering things AFTER they appear on the screen
+    const buffer = 30;
     const boundRect = element.getBoundingClientRect();
-    return boundRect.top >= 0 && 
-        boundRect.left >= 0 && 
-        boundRect.right <= (window.innerWidth || document.documentElement.clientWidth) &&
-        boundRect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+    return (boundRect.top + buffer) >= 0 && 
+        (boundRect.left + buffer) >= 0 && 
+        (boundRect.left - buffer) <= (window.innerWidth || document.documentElement.clientWidth) &&
+        (boundRect.top - buffer) <= (window.innerHeight || document.documentElement.clientHeight);
+}
+
+export const elementHasUserTagger = (element: any) : boolean => {
+    return elementContainsElementWithSelector(element, "div.user-tagger__tag-list");
 }
 
 export const getElementsInViewport = (querySelector: string) : Array<Element> => {
     return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(elementIsInViewport);
+}
+
+export const getElementsNotInViewport = (querySelector: string) : Array<Element> => {
+    return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(e => !elementIsInViewport(e));
+}
+
+export const getElementsWithUserTagger = (querySelector: string) : Array<Element> => {
+    return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(elementHasUserTagger);
+}
+
+export const getElementsWithoutUserTagger = (querySelector: string) : Array<Element> => {
+    return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(e => !elementHasUserTagger(e));
 }
