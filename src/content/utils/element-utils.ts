@@ -15,3 +15,23 @@ export const elementContainsElement = (element1: any, element2: any) : boolean =
 
     return false;
 }
+
+export const buildElementSelector = (element: any) => {
+    return `${element.nodeName.toLowerCase()}${(element.id ? '#' + element.id : "")}${(element.classList && element.classList.length > 0 ? "." + [].slice.call(element.classList).join(".") : "")}`;
+}
+
+export const elementContainsElementWithSelector = (element: any, elementSelector: string) : boolean => {
+    if(buildElementSelector(element) === elementSelector) {
+        return true;
+    }
+
+    if(element.childNodes && element.childNodes.length > 0) {
+        for(let i = 0; i < element.childNodes.length; i++) {
+            if(elementContainsElementWithSelector(element.childNodes[i], elementSelector)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

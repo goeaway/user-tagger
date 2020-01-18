@@ -94,6 +94,18 @@
 
         </div>
 
+        <button type="button" onclick="addComment()">ADD COMMENT</button>
+
         <script src="./output/content-bundle.js"></script>
+
+        <script>
+            var addComment = () => {
+                var commentBox = document.querySelector(".comments");
+                var div = document.createElement("div");
+                div.className = "comment";
+                div.innerHTML = '<div class="comment__header"> <div class="comment__header__author"> username2 </div> </div> <div class="comment__body"> Eat my cereal i hate you</div>';
+                commentBox.append(div);
+            }
+        </script>
     </body>
 </html>
