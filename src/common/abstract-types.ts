@@ -35,5 +35,6 @@ export interface ITagService {
 
 export interface IStorageService {
     get: <T>(key: string) => T;
+    getMatchingKey: <T>(key: string) => Array<T>;
     set: <T>(key: string, value: T) => void;
 }
