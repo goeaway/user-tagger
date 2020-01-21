@@ -65,3 +65,11 @@ export const getElementsWithUserTagger = (querySelector: string) : Array<Element
 export const getElementsWithoutUserTagger = (querySelector: string) : Array<Element> => {
     return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(e => !elementHasUserTagger(e));
 }
+
+export const refIsInBottomHalfOfViewport = (ref: React.MutableRefObject<any>) => {
+
+}
+
+export const refIsInRightHalfOfViewport = (ref: React.MutableRefObject<any>) => {
+    
+}

@@ -1,19 +1,17 @@
-import { ISiteUserService } from "../abstract-types";
+import { ISiteUserService, IStorageService } from "../abstract-types";
 import { SiteUser, Site, UserTag, RGBExtensions } from "../types";
 import * as uuid from "uuid";
 
 export default class SiteUserService implements ISiteUserService {
-    private _userStore: Array<SiteUser>;
+    private LOCAL_STORAGE_SITE_USER_KEY = "user-tagger.saved-site-user";
+    private _storageService: IStorageService;
 
-    constructor() {
-        this._userStore = [
-            { username: "username2", tags: [{ id: uuid.v1(), name: "troll", rules: [], backgroundColor: RGBExtensions.black(), color: RGBExtensions.white()}] }
-        ];
+    constructor(storageService: IStorageService) {
+        this._storageService = storageService;
     }
 
-    getUser = (username?: string, site?: Site, tags?: Array<UserTag>) : SiteUser => {
-        const existing = this._userStore.find(u => u.username === username);
-
+    getUser = (username: string) : SiteUser => {
+        const existing = this._storageService.get<SiteUser>(this.LOCAL_STORAGE_SITE_USER_KEY + "." + username);
         // return the existing if it exists, otherwise return an empty user. Don't bother putting that empty one in the store
         // at the moment we don't need it there and it will be added if the app user decides to add a tag to it
         return existing || { username: username, tags: [] };
@@ -22,7 +20,8 @@ export default class SiteUserService implements ISiteUserService {
     getTagsNotFoundOnUser = (excludingUser?: SiteUser, search?: string) : Array<UserTag> => {
         let allTags: Array<UserTag> = [];
 
-        this._userStore.forEach(u => allTags = allTags.concat(u.tags));
+        // todo fix this so we can get all tags saved so far
+        [].forEach(u => allTags = allTags.concat(u.tags));
         if(excludingUser) {
             allTags = allTags.filter(t => !excludingUser.tags.some(ex => ex.id === t.id));
         }
@@ -34,14 +33,11 @@ export default class SiteUserService implements ISiteUserService {
         return allTags;
     }
 
-    updateUserTags = (username: string, tags: Array<UserTag>) => {
-        const userInStore = this._userStore.find(u => u.username === username);
-        // update the tags on the existing item in the store
-        // or create a new item in the store
-        if(userInStore) {
-                userInStore.tags = tags;
-        } else {
-            this._userStore.push({ username, tags});
+    setUser = (user: SiteUser) => {
+        if(!user) {
+            throw "user was null";
         }
+
+        this._storageService.set(this.LOCAL_STORAGE_SITE_USER_KEY + "." + user.username, user);
     }
 }

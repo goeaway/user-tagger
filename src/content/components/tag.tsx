@@ -31,6 +31,7 @@ const Tag : React.FC<TagProps> = ({ user, tag, onTagRemove, onTagChange, onTagSw
 
     return (
         <span className="user-tagger__tag" onClick={handleTagClick}>
+            <span className="user-tagger__tag__arrow__shadow"></span>
             <span className="user-tagger__tag__arrow" style={{borderRightColor: RGBExtensions.getStringForCss(tag.backgroundColor)}}></span>
             <span className="user-tagger__tag__content" style={{backgroundColor: RGBExtensions.getStringForCss(tag.backgroundColor), color: RGBExtensions.getStringForCss(tag.color)}}>
                 {tag.name}

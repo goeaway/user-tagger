@@ -3,7 +3,7 @@ import { UserTag, SiteUser, RGBExtensions } from "../../common/types";
 import Tag from "./tag";
 import { getRandomTagName, getRandomRGBValue } from "../utils/randomisations";
 import { v1 } from "uuid";
-import SiteUserServiceContext from "../context/site-user-service-context";
+import ServiceContext from "../context/service-context";
 
 export interface TagListProps {
     listIndex: number;
@@ -17,7 +17,7 @@ export interface TagListProps {
 }
 
 const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, onTagRemoved, onTagClick, editLast, preview }) => {
-    const userService = React.useContext(SiteUserServiceContext);
+    const userService = React.useContext(ServiceContext).SiteUserService;
     
     const tagButtonHandler = () => {
         // add a new tag to the list and set it to isNew
@@ -31,13 +31,17 @@ const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, on
         };
 
         const updatedTags = tags.concat(newTag);
-        userService.updateUserTags(user.username, updatedTags);
+        user.tags = updatedTags;
+        userService.setUser(user);
+        // userService.updateUserTags(user.username, updatedTags);
         onTagAdded(user.username, listIndex);
     };
 
     const handleTagRemove = (id: string) => {
         const updatedTags = tags.filter(t => t.id !== id);
-        userService.updateUserTags(user.username, updatedTags);
+        user.tags = updatedTags;
+        userService.setUser(user);
+        // userService.updateUserTags(user.username, updatedTags);
         onTagRemoved(user.username);
     }
 
@@ -50,7 +54,9 @@ const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, on
             existing.color = newTag.color;
         }
 
-        userService.updateUserTags(user.username, tags);
+        user.tags = tags;
+        userService.setUser(user);
+        // userService.updateUserTags(user.username, tags);
         // -1 because we don't want the last tag in this list to open
         onTagAdded(user.username, -1);
     }
@@ -62,7 +68,9 @@ const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, on
             tags[oldTagIndex] = newTag;
         }
 
-        userService.updateUserTags(user.username, tags);
+        user.tags = tags;
+        userService.setUser(user);
+        // userService.updateUserTags(user.username, tags);
         // -1 because we don't want the last tag in this list to open
         onTagAdded(user.username, -1);
     }

@@ -14,18 +14,14 @@ export interface ISiteService {
     getCurrentSite: () => Site;
 }
 
-export interface IStorageService {
-    get: (key: string) => {};
-    set: (key: string, value: any) => void;
-}
-
 export interface ISiteUserService {
     /**
      * Gets the first user that matches the username, site or tags in the list. Returns undefined if no users were found
      */
-    getUser: (username?: string, site?: Site, tags?: Array<UserTag>) => SiteUser;
+    getUser: (username: string) => SiteUser;
+    setUser: (user: SiteUser) => void;
     getTagsNotFoundOnUser: (excludingUser?: SiteUser, search?: string) => Array<UserTag>;
-    updateUserTags: (username: string, tags: Array<UserTag>) => void
+    //updateUserTags: (username: string, tags: Array<UserTag>) => void
 
 }
 
@@ -35,4 +31,9 @@ export interface IUsernameExtractionService {
 
 export interface ITagService {
     getTags: () => Array<UserTag>;
+}
+
+export interface IStorageService {
+    get: <T>(key: string) => T;
+    set: <T>(key: string, value: T) => void;
 }

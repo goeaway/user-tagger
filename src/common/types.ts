@@ -88,3 +88,7 @@ export class RGBExtensions {
         return { R: 255, G: 255, B: 255 };
     }
 }
+
+export interface LooseObject {
+    [key: string]: any;
+}

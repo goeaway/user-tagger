@@ -4,7 +4,7 @@ import TagColorPicker from "./tag-color-picker";
 import TagCreationOption from "./tag-creation-option";
 import { elementContainsElement } from "../utils/element-utils"
 import TagList from "./tag-list";
-import SiteUserServiceContext from "../context/site-user-service-context";
+import ServiceContext from "../context/service-context";
 
 export interface TagInputProps {
     onTagChange: (tag: UserTag) => void;
@@ -15,7 +15,7 @@ export interface TagInputProps {
 }
 
 const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose, onTagSwap, user }) => {
-    const userService = React.useContext(SiteUserServiceContext);
+    const userService = React.useContext(ServiceContext).SiteUserService;
     const containerRef = React.useRef();
     const [expandedOption, setExpandedOption] = React.useState(0);
     const [beAbove, setBeAbove] = React.useState(false);

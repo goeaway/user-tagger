@@ -4,20 +4,18 @@ import { getElementParent } from "../../common/utils/parent-element-indexer";
 import { createPortal, } from "react-dom";
 import TagList from "../components/tag-list";
 import "../styles/structure.less";
-import SiteUserServiceContext from "../context/site-user-service-context";
-import UsernameExtractionServiceContext from "../context/username-extraction-service-context";
 import { getElementsInViewport } from "../utils/element-utils";
 import { v1 as newGuid } from "uuid";
 import useElementAddedMutationEffect from "../hooks/use-element-added-mutation-effect";
 import useElementScrolledInOrOutEffect from "../hooks/use-element-scrolled-in-or-out-effect";
+import ServiceContext from "../context/service-context";
 
 export interface ContentAppProps {
     siteService: ISiteService;
 }
 
 const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
-    const siteUserService = React.useContext(SiteUserServiceContext);
-    const extractionService = React.useContext(UsernameExtractionServiceContext);
+    const serviceContext = React.useContext(ServiceContext);
 
     const [rerender, setRerender] = React.useState();
     const currentSite = siteService.getCurrentSite();
@@ -26,7 +24,10 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
     
     useElementScrolledInOrOutEffect(
         currentSite.userIdentElementSelector,
-        () => setRerender(newGuid())
+        () => {
+            setRerender(newGuid());
+            setTagListJustAddedTo(-1);
+        }
     );
 
     useElementAddedMutationEffect(
@@ -52,8 +53,8 @@ const ContentApp: React.FC<ContentAppProps> = ({ siteService }) => {
         <React.Fragment>
             {commentElements.map((ce, index) => {
                 const anchor = getElementParent(ce, currentSite.userIdentElementParentAnchorIndex);
-                const extractedUsername = extractionService.extract(ce.innerHTML);
-                const user = siteUserService.getUser(extractedUsername, currentSite);
+                const extractedUsername = serviceContext.UsernameExtractionService.extract(ce.innerHTML);
+                const user = serviceContext.SiteUserService.getUser(extractedUsername);
 
                 return createPortal(
                     <TagList 

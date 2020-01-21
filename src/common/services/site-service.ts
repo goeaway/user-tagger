@@ -1,12 +1,10 @@
-import { ISiteService, IStorageService } from "../abstract-types";
+import { ISiteService} from "../abstract-types";
 import { Site } from "../types";
 
 export default class SiteService implements ISiteService {
-    private _storageService: IStorageService;
     private _currentSite: Site;
 
-    constructor(storageService: IStorageService) {
-        this._storageService = storageService;
+    constructor() {
         
         // load from storage the user defined ones
         const pages: Array<Site> = []
