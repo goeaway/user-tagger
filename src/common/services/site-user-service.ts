@@ -42,6 +42,6 @@ export default class SiteUserService implements ISiteUserService {
             throw "user was null";
         }
 
-        this._storageService.set(this.LOCAL_STORAGE_SITE_USER_KEY + "." + user.username, user);
+        this._storageService.set(this.LOCAL_STORAGE_SITE_USER_KEY + user.username, user);
     }
 }
