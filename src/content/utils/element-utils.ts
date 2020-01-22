@@ -66,10 +66,12 @@ export const getElementsWithoutUserTagger = (querySelector: string) : Array<Elem
     return ([].slice.call(document.querySelectorAll(querySelector)) as Array<Element>).filter(e => !elementHasUserTagger(e));
 }
 
-export const refIsInBottomHalfOfViewport = (ref: React.MutableRefObject<any>) => {
-
+export const elementIsOffBottomOfViewport = (element: any) : boolean => {
+    const boundRect = element.getBoundingClientRect();
+    return boundRect.bottom >= window.innerHeight;
 }
 
-export const refIsInRightHalfOfViewport = (ref: React.MutableRefObject<any>) => {
-    
+export const elementIsOffRightOfViewport = (element: any) : boolean => {
+    const boundRect = element.getBoundingClientRect();
+    return boundRect.right >= window.innerWidth;
 }

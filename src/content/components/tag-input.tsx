@@ -2,7 +2,7 @@ import * as React from "react";
 import { UserTag, RGB, SiteUser } from "../../common/types";
 import TagColorPicker from "./tag-color-picker";
 import TagCreationOption from "./tag-creation-option";
-import { elementContainsElement } from "../utils/element-utils"
+import { elementContainsElement, elementIsOffBottomOfViewport, elementIsOffRightOfViewport } from "../utils/element-utils"
 import TagList from "./tag-list";
 import ServiceContext from "../context/service-context";
 
@@ -36,6 +36,13 @@ const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose, onTagSwa
         return () => document.removeEventListener("click", eventListener);
     }, []);
 
+    // every time we rerender we need to check where the menu is displaying
+    React.useEffect(() => {
+        const current = containerRef.current as any;
+        setBeAbove(current && elementIsOffBottomOfViewport(current));
+        setBeRight(current && elementIsOffRightOfViewport(current));
+    }, []);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onTagChange({ 
             id: tag.id,
@@ -67,7 +74,6 @@ const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose, onTagSwa
         }
     }
     
-    
     const tagColorChangeHandler = (rgb: RGB) => {
         onTagChange({ id: tag.id, name: tag.name, rules: tag.rules, color: tag.color, backgroundColor: rgb });
     }
@@ -89,7 +95,9 @@ const TagInput: React.FC<TagInputProps> = ({ tag, onTagChange, onClose, onTagSwa
     }
 
     return (
-        <div className="user-tagger__tag-input user-tagger__tag-input--beneath user-tagger__tag-input--left" ref={containerRef} onKeyDown={handleKeyPress}>
+        <div className={`user-tagger__tag-input user-tagger__tag-input--${(beAbove ? "above" : "beneath")} user-tagger__tag-input--${(beRight ? "right" : "left")}`} 
+            ref={containerRef} 
+            onKeyDown={handleKeyPress}>
             <TagCreationOption optionId={0} expanded={expandedOption === 0} title="Suggestions" onCollapseClicked={creationOptionCollapseClickedHandler}>
                 <TagList listIndex={0} tags={userService.getTagsNotFoundOnUser(user)} user={user} preview={true} onTagClick={tagSuggestionSelectedHandler} onTagAdded={() => {}} onTagRemoved={() => {}} />
             </TagCreationOption>

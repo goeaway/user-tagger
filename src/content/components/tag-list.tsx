@@ -99,6 +99,7 @@ const TagList: React.FC<TagListProps> = ({ listIndex, user, tags, onTagAdded, on
                             +
                     </button>
                 }
+                {preview && (!tags || tags.length == 0) && <small><i>No Tags...</i></small>}
             </div>
         </div>
     );
