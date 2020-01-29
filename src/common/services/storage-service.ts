@@ -45,6 +45,7 @@ export default class StorageService implements IStorageService {
         }
 
         const localStorageStr = window.localStorage.getItem(key);
+
         return localStorageStr && JSON.parse(this.decode(localStorageStr)) as T;
     }  
 

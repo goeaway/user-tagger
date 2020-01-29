@@ -38,3 +38,9 @@ export interface IStorageService {
     getMatchingKey: <T>(key: string) => Array<T>;
     set: <T>(key: string, value: T) => void;
 }
+
+export interface IUserTaggerAPI {
+    highlightCommentSection: () => void;
+    highlightComment: (index: number) => void;
+    
+}

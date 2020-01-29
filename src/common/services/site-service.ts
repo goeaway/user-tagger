@@ -20,11 +20,21 @@ export default class SiteService implements ISiteService {
                 userIdentElementParentBlockIndex: 2, 
                 usernameExtractionRegex: undefined,
                 commentSectionContainer: "div.comments"
-            }
+            },
+            { 
+                id: "yt", 
+                name: "YouTube", 
+                domain: "www.youtube.com", 
+                locationPattern: "/watch", 
+                userIdentElementSelector: "a#author-text", 
+                userIdentElementParentAnchorIndex: 1, 
+                userIdentElementParentBlockIndex: 3,
+                usernameExtractionRegex: undefined,
+                commentSectionContainer: "div#comments"
+            },
         );
 
         // pages.push(
-        //     { id: "yt", name: "YouTube", domain: "youtube.com", locationPattern: "/watch", userIdentElementSelector: "a#author-text", userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3 },
         //     { id: "ore", name: "Old Reddit", domain: "old.reddit.com", locationPattern: "/comments/", userIdentElementSelector: "a.author", userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3 },
         //     { id: "nre", name: "New Reddit", domain: "reddit.com", locationPattern: "/comments/", userIdentElementSelector: 'a[href^="/user/"]', userIdentElementParentAnchorIndex: 1, userIdentElementParentBlockIndex: 3}
         // );
